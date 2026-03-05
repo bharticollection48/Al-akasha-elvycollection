@@ -1,5 +1,5 @@
 // --- 1. CONFIGURATION ---
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzdL8t-sKlAs1mEg7D4eHvbS3LNH-g4FQ6fG1UwZ55WyU0wibhfc1EZGoiw8S7jjBhKPg/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyIPMJkkNyixopJDKSmvkWcyfMjkhKAI4to5dC-8ot-cINWLlwXg4pLFmThXEtw-Q/exec";
 const IMGBB_API_KEY = "9ee7440c835d66e8df057ca7e92ce285"; 
 
 // --- 2. Server se Settings Fetch Karna ---
@@ -23,7 +23,7 @@ async function fetchServerSettings() {
     }
 }
 
-// --- 3. Security Check ---
+// --- 3. Security Check (Anti-Reload Fix) ---
 window.onload = async function() {
     const alreadyLoggedIn = sessionStorage.getItem('isGhabaAdmin');
     const serverProducts = await fetchServerSettings();
@@ -77,27 +77,24 @@ function updatePass() {
     if(newPass.length >= 4) syncSettingsToServer(currentUPI, newPass);
 }
 
-// --- 5. Media Upload (Images & Video Handling) ---
-// Note: ImgBB doesn't support video. For video, we use a different approach or direct Base64 if small.
+// --- 5. Media Upload (Optimized) ---
 async function processMedia(input, slotOrId, previewId) {
     const file = input.files[0];
     if (!file) return;
 
-    // Check if it's a video
     if (file.type.startsWith('video/')) {
-        if (file.size > 15 * 1024 * 1024) { // 15MB Limit
-            alert("Video file too large! Please keep it under 15MB.");
+        // 5MB Limit for Base64 to ensure Google Sheet cell doesn't break
+        if (file.size > 5 * 1024 * 1024) { 
+            alert("Video बहुत बड़ा है! कृपया 5MB से छोटा वीडियो चुनें ताकि वह तेज़ी से लोड हो सके।");
+            input.value = "";
             return;
         }
         uploadVideoDirectly(file);
         return;
     }
-
-    // If it's an image, use ImgBB
     uploadImageToImgBB(file, slotOrId, previewId, input);
 }
 
-// Image Upload Logic
 async function uploadImageToImgBB(file, slot, previewId, input) {
     const btnSpan = input.previousElementSibling; 
     if (btnSpan) btnSpan.innerText = "Wait...";
@@ -118,26 +115,28 @@ async function uploadImageToImgBB(file, slot, previewId, input) {
             if (btnSpan) btnSpan.innerText = "Done ✅";
         }
     } catch (error) {
-        alert("Photo upload fail!");
+        alert("Photo upload failed!");
+        if (btnSpan) btnSpan.innerText = "Gallery";
     } finally {
         if(typeof showLoader === "function") showLoader(false);
     }
 }
 
-// Video Reading Logic (Convert to Base64)
 function uploadVideoDirectly(file) {
-    if(typeof showLoader === "function") showLoader(true, "Reading Video File...");
+    if(typeof showLoader === "function") showLoader(true, "Processing Video...");
     const reader = new FileReader();
     reader.onload = function(e) {
         document.getElementById('pVideo').value = e.target.result;
-        if(document.getElementById('vidStatus')) document.getElementById('vidStatus').style.display = 'block';
+        if(document.getElementById('vidStatus')) {
+            document.getElementById('vidStatus').style.display = 'block';
+            document.getElementById('vidStatus').innerText = "Video Ready ✅";
+        }
         if(typeof showLoader === "function") showLoader(false);
-        alert("Video loaded! Click Publish to save.");
     };
     reader.readAsDataURL(file);
 }
 
-// --- 6. Save Product ---
+// --- 6. Save Product (No Page Reload) ---
 async function saveProduct() {
     const name = document.getElementById('pName').value.trim();
     const price = document.getElementById('pPrice').value.trim();
@@ -151,14 +150,14 @@ async function saveProduct() {
     }
 
     if (!name || !price || gallery.length === 0) {
-        alert("Please enter Name, Price and at least one Image!");
+        alert("नाम, कीमत और कम से कम एक फोटो ज़रूरी है!");
         return;
     }
 
     const submitBtn = document.getElementById('publishBtn');
-    submitBtn.innerText = "SAVING TO CLOUD...";
+    submitBtn.innerText = "PUBLISHING...";
     submitBtn.disabled = true;
-    if(typeof showLoader === "function") showLoader(true, "Publishing to Google Sheets...");
+    if(typeof showLoader === "function") showLoader(true, "Saving to Server...");
 
     const newProduct = {
         id: Date.now(),
@@ -171,15 +170,13 @@ async function saveProduct() {
     };
 
     try {
-        // We use POST with no-cors. If file is too big, this might still fail.
         await fetch(GOOGLE_SHEET_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newProduct)
         });
 
-        alert("Product Successfully Saved to Google Sheets! ✅");
+        alert("Product Successfully Added! ✅");
 
         // Clear Form
         document.getElementById('pName').value = "";
@@ -195,8 +192,7 @@ async function saveProduct() {
         displayAdminProducts(freshProducts);
 
     } catch (error) {
-        console.error(error);
-        alert("Error saving product. Check your internet or file size.");
+        alert("Server error! Please try again.");
     } finally {
         submitBtn.innerText = "PUBLISH TO STORE";
         submitBtn.disabled = false;
@@ -204,18 +200,29 @@ async function saveProduct() {
     }
 }
 
-// --- 7. UI Helpers ---
+// --- 7. UI Helpers (Fast Loading Fix) ---
 function displayAdminProducts(products) {
     const list = document.getElementById('adminProductList');
     if (!list || !products) return;
     
-    list.innerHTML = products.slice().reverse().map(p => `
-        <div class="p-card">
-            <img src="${p.mainImg}">
-            <p style="font-size:12px; font-weight:bold; margin:5px 0;">${p.name}</p>
+    // Clear list
+    list.innerHTML = "";
+    
+    // Use DocumentFragment for faster rendering (fixes lag in Gift category)
+    const fragment = document.createDocumentFragment();
+    
+    products.slice().reverse().forEach(p => {
+        const card = document.createElement('div');
+        card.className = "p-card";
+        card.innerHTML = `
+            <img src="${p.mainImg}" loading="lazy" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+            <p style="font-size:12px; font-weight:bold; margin:5px 0; color:#333;">${p.name}</p>
             <p style="color:#f10c59; font-weight:bold;">₹${p.price}</p>
-        </div>
-    `).join('');
+        `;
+        fragment.appendChild(card);
+    });
+    
+    list.appendChild(fragment);
 }
 
 function logout() { 
