@@ -160,15 +160,10 @@
                 
                 <hr style="border: 0.5px solid #eee; margin: 15px 0;">
                 
-                <label>Product Video (Direct Gallery Upload)</label>
-                <div class="media-row" style="grid-template-columns: 1fr 100px;">
-                    <input type="text" id="pVideo" placeholder="Video Link (Auto-generated on upload)">
-                    <div class="file-input-wrapper">
-                        <span class="btn-file" style="background:#333; color:white; border-color:#333;">Gallery</span>
-                        <input type="file" accept="video/*" onchange="processMedia(this, 'pVideo', null)">
-                    </div>
+                <label>Product Video (Paste Any Link Below)</label>
+                <div class="input-group">
+                    <input type="text" id="pVideo" placeholder="Paste YouTube, Drive or any Video Link here">
                 </div>
-                <div id="vidStatus" class="video-status"><i class="fa-solid fa-circle-check"></i> Video Selected Successfully!</div>
             </div>
 
             <button class="btn-upload" id="publishBtn" onclick="saveProduct()">PUBLISH TO STORE</button>
@@ -190,27 +185,21 @@
             document.getElementById('loader-text').innerText = text;
         }
 
-        // Media Processing Function (Images & Video)
+        // Media Processing Function (Images only - Video removed from here to allow direct links)
         function processMedia(input, targetInputId, previewImgId) {
             const file = input.files[0];
             if (!file) return;
 
-            // Show loader for large files (videos)
             showLoader(true, "Processing file...");
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const base64Data = e.target.result;
                 
-                // Set the URL/Base64 value to the input box
                 document.getElementById(targetInputId).value = base64Data;
                 
-                // If it's an image, update the preview
                 if (previewImgId) {
                     document.getElementById(previewImgId).src = base64Data;
-                } else {
-                    // If it's a video, show success status
-                    document.getElementById('vidStatus').style.display = 'block';
                 }
                 
                 showLoader(false);

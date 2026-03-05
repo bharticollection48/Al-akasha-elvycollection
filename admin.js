@@ -48,7 +48,7 @@ window.onload = async function() {
 // --- 4. Settings Update ---
 async function syncSettingsToServer(newUpi, newPass) {
     const data = { type: "updateSettings", upi: newUpi, password: newPass };
-    if(typeof showLoader === "function") showLoader(true);
+    if(typeof showLoader === "function") showLoader(true, "Updating Server...");
     try {
         await fetch(GOOGLE_SHEET_URL, {
             method: 'POST',
@@ -77,28 +77,14 @@ function updatePass() {
     if(newPass.length >= 4) syncSettingsToServer(currentUPI, newPass);
 }
 
-// --- 5. Media Upload (Optimized) ---
-async function processMedia(input, slotOrId, previewId) {
+// --- 5. Photo Upload to ImgBB ---
+async function processMedia(input, slot, previewId) {
     const file = input.files[0];
     if (!file) return;
 
-    if (file.type.startsWith('video/')) {
-        // 5MB Limit for Base64 to ensure Google Sheet cell doesn't break
-        if (file.size > 5 * 1024 * 1024) { 
-            alert("Video बहुत बड़ा है! कृपया 5MB से छोटा वीडियो चुनें ताकि वह तेज़ी से लोड हो सके।");
-            input.value = "";
-            return;
-        }
-        uploadVideoDirectly(file);
-        return;
-    }
-    uploadImageToImgBB(file, slotOrId, previewId, input);
-}
-
-async function uploadImageToImgBB(file, slot, previewId, input) {
     const btnSpan = input.previousElementSibling; 
     if (btnSpan) btnSpan.innerText = "Wait...";
-    if(typeof showLoader === "function") showLoader(true, "Uploading Image...");
+    if(typeof showLoader === "function") showLoader(true, "Uploading Photo...");
 
     const formData = new FormData();
     formData.append("image", file);
@@ -110,7 +96,7 @@ async function uploadImageToImgBB(file, slot, previewId, input) {
         });
         const data = await response.json();
         if (data.success) {
-            document.getElementById(`url${slot}`).value = data.data.url;
+            document.getElementById(`url${slot.replace('url', '')}`).value = data.data.url;
             if (previewId) document.getElementById(previewId).src = data.data.url;
             if (btnSpan) btnSpan.innerText = "Done ✅";
         }
@@ -122,25 +108,13 @@ async function uploadImageToImgBB(file, slot, previewId, input) {
     }
 }
 
-function uploadVideoDirectly(file) {
-    if(typeof showLoader === "function") showLoader(true, "Processing Video...");
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        document.getElementById('pVideo').value = e.target.result;
-        if(document.getElementById('vidStatus')) {
-            document.getElementById('vidStatus').style.display = 'block';
-            document.getElementById('vidStatus').innerText = "Video Ready ✅";
-        }
-        if(typeof showLoader === "function") showLoader(false);
-    };
-    reader.readAsDataURL(file);
-}
-
-// --- 6. Save Product (No Page Reload) ---
+// --- 6. Save Product ---
 async function saveProduct() {
     const name = document.getElementById('pName').value.trim();
     const price = document.getElementById('pPrice').value.trim();
     const category = document.getElementById('pCategory').value;
+    
+    // Video value now directly from the input link box
     const video = document.getElementById('pVideo').value.trim();
 
     const gallery = [];
@@ -150,7 +124,7 @@ async function saveProduct() {
     }
 
     if (!name || !price || gallery.length === 0) {
-        alert("नाम, कीमत और कम से कम एक फोटो ज़रूरी है!");
+        alert("नाम, कीमत और कम से कम एक फोटो ज़रूरी है!");
         return;
     }
 
@@ -166,7 +140,7 @@ async function saveProduct() {
         category: category,
         mainImg: gallery[0],
         gallery: gallery, 
-        video: video
+        video: video 
     };
 
     try {
@@ -178,14 +152,16 @@ async function saveProduct() {
 
         alert("Product Successfully Added! ✅");
 
-        // Clear Form
+        // Form Clear Karein
         document.getElementById('pName').value = "";
         document.getElementById('pPrice').value = "";
         document.getElementById('pVideo').value = "";
-        if(document.getElementById('vidStatus')) document.getElementById('vidStatus').style.display = 'none';
         for(let i=1; i<=5; i++){
             document.getElementById(`url${i}`).value = "";
             document.getElementById(`pre${i}`).src = "https://via.placeholder.com/50";
+            // Reset labels
+            const labels = document.querySelectorAll('.btn-file');
+            labels.forEach(l => { if(l.innerText === "Done ✅") l.innerText = "Gallery"; });
         }
 
         const freshProducts = await fetchServerSettings();
@@ -200,15 +176,12 @@ async function saveProduct() {
     }
 }
 
-// --- 7. UI Helpers (Fast Loading Fix) ---
+// --- 7. UI Helpers ---
 function displayAdminProducts(products) {
     const list = document.getElementById('adminProductList');
     if (!list || !products) return;
     
-    // Clear list
     list.innerHTML = "";
-    
-    // Use DocumentFragment for faster rendering (fixes lag in Gift category)
     const fragment = document.createDocumentFragment();
     
     products.slice().reverse().forEach(p => {

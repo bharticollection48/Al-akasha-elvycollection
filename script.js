@@ -1,5 +1,5 @@
 // --- 1. CONFIGURATION ---
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKbWEBwz1sm4sftFM5yM-ako6ProOKTPEGtA_7zDqA8_LrJ-_KTXtCfsAIhfXqIlpy/exec"; 
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyIPMJkkNyixopJDKSmvkWcyfMjkhKAI4to5dC-8ot-cINWLlwXg4pLFmThXEtw-Q/exec";
 
 let allProducts = [];
 let currentData = [];

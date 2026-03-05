@@ -1,5 +1,5 @@
 // --- 1. CONFIGURATION ---
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdL8t-sKlAs1mEg7D4eHvbS3LNH-g4FQ6fG1UwZ55WyU0wibhfc1EZGoiw8S7jjBhKPg/exec"; 
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyIPMJkkNyixopJDKSmvkWcyfMjkhKAI4to5dC-8ot-cINWLlwXg4pLFmThXEtw-Q/exec";
 
 // URL se Product ID nikalna
 const urlParams = new URLSearchParams(window.location.search);
