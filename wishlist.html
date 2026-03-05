@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al akasha elvy lifestyle collection</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://img.freepik.com/premium-vector/shopping-logo-vector-icon_636116-200.jpg?semt=ais_hybrid&w=740&q=80"> 
+    
+    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --gold: #d4af37;
+            --dark-royal: #1a1a1a;
+            --soft-white: #fcfcfc;
+            --text-muted: #777;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--soft-white); 
+            margin: 0;
+            color: var(--dark-royal);
+        }
+
+        /* --- Boutique Wishlist Header --- */
+        .wishlist-header { 
+            padding: 20px; 
+            text-align: center; 
+            background: white; 
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .wishlist-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            margin: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .back-btn { 
+            position: absolute; 
+            left: 20px; 
+            top: 50%; 
+            transform: translateY(-50%);
+            font-size: 18px; 
+            color: var(--dark-royal); 
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .back-btn:hover { color: var(--gold); }
+
+        /* --- Empty Wishlist State --- */
+        .empty-wishlist { 
+            text-align: center; 
+            padding: 100px 20px; 
+            color: var(--text-muted); 
+        }
+
+        .empty-wishlist i {
+            font-size: 50px;
+            color: #eee;
+            margin-bottom: 20px;
+        }
+
+        .empty-wishlist p {
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .shop-now-btn {
+            background: var(--dark-royal);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Product Card Overrides for Wishlist --- */
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px 15px;
+        }
+
+        /* Removal animation */
+        .removing {
+            transform: scale(0.9);
+            opacity: 0;
+            transition: 0.4s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="wishlist-header">
+        <i class="fa-solid fa-chevron-left back-btn" onclick="window.location.href='index.html'"></i>
+        <h2>My <span>Wishlist</span></h2>
+    </header>
+
+    <main id="wishlistDisplay" class="wishlist-grid">
+        </main>
+
+    <script>
+        // --- Wishlist Logic ---
+        function loadWishlist() {
+            const display = document.getElementById('wishlistDisplay');
+            const wishlistIds = JSON.parse(localStorage.getItem('myWishlist')) || [];
+            const allProducts = JSON.parse(localStorage.getItem('myProducts')) || [];
+
+            // Filter products that are in wishlist
+            const favoriteProducts = allProducts.filter(p => wishlistIds.includes(p.id));
+
+            if (favoriteProducts.length === 0) {
+                display.innerHTML = `
+                    <div class="empty-wishlist" style="grid-column: 1/-1;">
+                        <i class="fa-regular fa-heart"></i>
+                        <h3>Your wishlist is empty</h3>
+                        <p>Save your favorite premium ethnic wear here.</p>
+                        <a href="index.html" class="shop-now-btn">Start Shopping</a>
+                    </div>`;
+                return;
+            }
+
+            display.innerHTML = favoriteProducts.map(p => {
+                const price = parseFloat(p.price) || 0;
+                return `
+                    <div class="p-card" id="wish-item-${p.id}" style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 3px 10px rgba(0,0,0,0.05); position:relative;">
+                        <i class="fa-solid fa-circle-xmark" 
+                           style="position:absolute; top:8px; right:8px; z-index:10; color:white; font-size:20px; text-shadow:0 0 5px rgba(0,0,0,0.5); cursor:pointer;"
+                           onclick="removeFromWishlist(event, ${p.id})"></i>
+                        
+                        <div onclick="window.location.href='details.html?id=${p.id}'">
+                            <div class="p-img-wrapper" style="height:200px;">
+                                <img src="${p.mainImg}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover;">
+                            </div>
+                            <div class="p-details" style="padding:12px;">
+                                <p style="margin:0; font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</p>
+                                <div style="margin-top:5px; display:flex; align-items:center; gap:8px;">
+                                    <span style="font-size:15px; font-weight:700; color:var(--dark-royal);">₹${price}</span>
+                                    <span style="font-size:10px; text-decoration:line-through; color:#999;">₹${Math.round(price*1.4)}</span>
+                                </div>
+                                <button style="width:100%; margin-top:10px; background:var(--gold); border:none; color:white; padding:8px; border-radius:6px; font-size:11px; font-weight:700; text-transform:uppercase;">View Details</button>
+                            </div>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        function removeFromWishlist(event, id) {
+            event.stopPropagation();
+            let wishlist = JSON.parse(localStorage.getItem('myWishlist')) || [];
+            wishlist = wishlist.filter(item => item !== id);
+            localStorage.setItem('myWishlist', JSON.stringify(wishlist));
+            
+            // UI se remove karne ka animation
+            const element = document.getElementById(`wish-item-${id}`);
+            element.classList.add('removing');
+            setTimeout(() => {
+                loadWishlist();
+            }, 400);
+        }
+
+        window.onload = loadWishlist;
+    </script>
+</body>
+</html>

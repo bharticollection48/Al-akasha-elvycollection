@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al akasha elvy lifestyle collection</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://img.freepik.com/premium-vector/shopping-logo-vector-icon_636116-200.jpg?semt=ais_hybrid&w=740&q=80"> 
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* Modern Circular Categories - Optimized Size */
+        .category-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px; 
+            padding: 25px 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        .category-container::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+        .cat-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            min-width: 90px; 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .cat-card:active { transform: scale(0.9); }
+        
+        .cat-img-box {
+            width: 80px; 
+            height: 80px; 
+            border-radius: 50%;
+            border: 3px solid #fce4ec;
+            padding: 5px;
+            margin-bottom: 8px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .cat-img-box img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        /* Style for Gift Icon specifically */
+        .cat-img-box i.gift-cat-icon {
+            font-size: 35px;
+            color: #e74c3c;
+        }
+
+        .cat-card p {
+            font-size: 11px; 
+            font-weight: 600;
+            color: #444;
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .active-cat .cat-img-box { 
+            border-color: #d4af37; 
+            box-shadow: 0 0 20px rgba(212,175,55,0.5);
+            transform: translateY(-5px);
+        }
+        .active-cat p { color: #d4af37; }
+
+        /* Home Button Style in Header */
+        .home-trigger {
+            margin-right: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            color: #1a1a1a;
+        }
+        .home-trigger i { font-size: 18px; }
+        .home-trigger span { font-size: 10px; font-weight: 700; text-transform: uppercase; }
+
+        /* Offer Tags & Pricing */
+        .p-offer-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            z-index: 2;
+        }
+        .p-price-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+        .p-price { font-size: 17px; font-weight: 700; color: #1a1a1a; }
+        .p-old-price { font-size: 13px; color: #999; text-decoration: line-through; }
+        .p-discount-txt { color: #e74c3c; font-size: 12px; font-weight: 700; }
+
+        /* --- WHATSAPP FIXED POSITIONING --- */
+        .wa-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+        .wa-msg-pop {
+            background: white;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            border: 1px solid #eee;
+            position: relative;
+            animation: bounceIn 1s ease;
+            white-space: nowrap;
+            pointer-events: auto;
+        }
+        .wa-msg-pop::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 20px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+        }
+        .whatsapp-modern {
+            background: #25d366;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            pointer-events: auto;
+            transition: transform 0.3s ease;
+        }
+        .whatsapp-modern:hover { transform: scale(1.1); }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .wa-msg-pop { font-size: 12px; padding: 6px 12px; }
+            .whatsapp-modern { width: 50px; height: 50px; font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-top">
+            <div style="display: flex; align-items: center;">
+                <div class="home-trigger" onclick="filterProducts('HOME')">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </div>
+                <h1 class="logo" onclick="filterProducts('HOME')">Al Akasha<span>elvy🥻</span></h1>
+            </div>
+            
+            <div class="header-icons">
+                <div class="search-trigger icon-btn" onclick="toggleSearch()">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="wishlist-wrapper" onclick="window.location.href='wishlist.html'">
+                    <i id="mainWishIcon" class="fa-regular fa-heart icon-btn"></i>
+                    <span id="wishBadge" class="wish-badge" style="display:none;">0</span>
+                </div>
+                <div class="cart-wrapper" onclick="window.location.href='cart.html'">
+                    <i class="fa-solid fa-bag-shopping icon-btn"></i>
+                    <span id="cartBadgeIndex" class="cart-badge" style="display:none;">0</span>
+                </div>
+                <i class="fa-solid fa-bars-staggered icon-btn" onclick="toggleDropdown(event)"></i>
+                
+                <div id="menuDropdown" class="dropdown-menu">
+                    <a href="#" onclick="filterProducts('HOME')"><i class="fa-solid fa-shop"></i> Main Collection</a>
+                    <a href="wishlist.html"><i class="fa-solid fa-heart"></i> My Favorites</a>
+                    <a href="https://wa.me/919511567395"><i class="fa-solid fa-headset"></i> Contact Support</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-overlay" id="searchBar">
+            <div class="search-bar-inner">
+                <input type="text" id="searchInput" placeholder="Saree ya Kurti search karein..." oninput="searchProduct()">
+                <i class="fa-solid fa-xmark" onclick="toggleSearch()" style="cursor:pointer;"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-banner">
+        <div class="hero-content">
+            <p class="hero-subtext">The Art of Tradition</p>
+            <h2 class="hero-title">Timeless <span>Elegance</span></h2>
+            <button class="hero-btn" onclick="document.getElementById('category-section').scrollIntoView({behavior:'smooth'})">Explore Now</button>
+        </div>
+    </section>
+
+    <section class="category-section" id="category-section">
+        <div class="category-container">
+            <div class="cat-card" id="cat-SAREE" onclick="filterProducts('SAREE')">
+                <div class="cat-img-box">
+                    <img src="https://i.pinimg.com/736x/91/25/b4/9125b4293e92ec942e0d8cb4b5d7b806.jpg" alt="Saree">
+                </div>
+                <p>Saree</p>
+            </div>
+            <div class="cat-card" id="cat-KURTIS" onclick="filterProducts('KURTIS')">
+                <div class="cat-img-box">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmG2YSFD_Mc6bBBNV9TVMihhLI2FOKAhMEqw&s" alt="Kurtis">
+                </div>
+                <p>Kurtis & Dress</p>
+            </div>
+            <div class="cat-card" id="cat-GIFT" onclick="filterProducts('GIFT')">
+                <div class="cat-img-box" style="background: #fff5f5;">
+                    <i class="fa-solid fa-gift gift-cat-icon"></i>
+                </div>
+                <p>Gift Packing</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="feed-section">
+        <div class="section-heading">
+            <h3 id="feedTitle">Premium Collection</h3>
+        </div>
+        <main id="productDisplay" class="product-grid">
+            <div class="loader-box">
+                <i class="fa-solid fa-ellipsis fa-fade" style="font-size:30px; color:#d4af37;"></i>
+                <p style="margin-top:10px; font-size:12px; letter-spacing:1px;">Designing for you...</p>
+            </div>
+        </main>
+    </section>
+
+    <div class="wa-container">
+        <div class="wa-msg-pop">Al Collection chat</div>
+        <a href="https://wa.me/919511567395?text=I'm interested in your premium collection." 
+           class="whatsapp-modern" target="_blank">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdL8t-sKlAs1mEg7D4eHvbS3LNH-g4FQ6fG1UwZ55WyU0wibhfc1EZGoiw8S7jjBhKPg/exec"; 
+        let allProducts = [];
+
+        async function loadStoreData() {
+            try {
+                const response = await fetch(SCRIPT_URL + "?t=" + new Date().getTime());
+                const result = await response.json();
+                if (result.products) {
+                    allProducts = result.products.reverse();
+                    localStorage.setItem('myProducts', JSON.stringify(allProducts)); 
+                    filterProducts('HOME');
+                }
+            } catch (e) {
+                document.getElementById('productDisplay').innerHTML = '<p class="empty-msg">Unable to connect to server.</p>';
+            }
+            updateBadges();
+        }
+
+        function render(data) {
+            const grid = document.getElementById('productDisplay');
+            if(!data || data.length === 0) {
+                grid.innerHTML = '<p class="empty-msg">Items arriving soon...</p>';
+                return;
+            }
+            
+            const offers = [30, 40, 50];
+
+            grid.innerHTML = data.map(p => {
+                const price = parseFloat(p.price) || 0;
+                const randomOffer = offers[Math.floor(Math.random() * offers.length)];
+                const oldPrice = Math.round(price / (1 - randomOffer/100));
+                const rating = (Math.random() * (4.9 - 4.2) + 4.2).toFixed(1);
+
+                return `
+                    <div class="p-card" onclick="openProduct(${p.id})">
+                        <div class="p-img-wrapper">
+                            <span class="p-offer-tag">${randomOffer}% OFF</span>
+                            <img src="${p.mainImg}" alt="${p.name}" loading="lazy">
+                        </div>
+                        <div class="p-details">
+                            <p class="p-name">${p.name}</p>
+                            <div class="p-rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                                <span class="rating-count">(${rating})</span>
+                            </div>
+                            <div class="p-price-row">
+                                <span class="p-price">₹${price}</span>
+                                <span class="p-old-price">₹${oldPrice}</span>
+                                <span class="p-discount-txt">${randomOffer}% OFF</span>
+                            </div>
+                            <p class="p-shipping">Free Shipping</p>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        function filterProducts(category) {
+            document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active-cat'));
+            const element = document.getElementById('cat-' + category);
+            if(element) element.classList.add('active-cat');
+            
+            let filtered;
+            let displayTitle;
+
+            if (category === 'HOME') {
+                filtered = allProducts.filter(p => {
+                    const pCat = p.category ? p.category.toUpperCase() : "";
+                    return pCat === 'SAREE' || pCat === 'KURTIS' || pCat.includes('DRESS') || pCat === 'GIFT';
+                });
+                displayTitle = "Premium Collection";
+            } else {
+                filtered = allProducts.filter(p => {
+                    const pCat = p.category ? p.category.toUpperCase() : "";
+                    if (category === 'KURTIS') {
+                        return pCat === 'KURTIS' || pCat.includes('DRESS');
+                    }
+                    return pCat === category;
+                });
+                
+                if(category === 'SAREE') displayTitle = 'Premium Sarees';
+                else if(category === 'KURTIS') displayTitle = 'Kurtis & Dresses';
+                else if(category === 'GIFT') displayTitle = 'Exclusive Gift Packing';
+            }
+            
+            document.getElementById('feedTitle').innerText = displayTitle;
+            render(filtered);
+        }
+
+        function toggleSearch() {
+            document.getElementById('searchBar').classList.toggle('active');
+            if(document.getElementById('searchBar').classList.contains('active')) {
+                document.getElementById('searchInput').focus();
+            }
+        }
+
+        function searchProduct() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            const searchRes = allProducts.filter(p => 
+                (p.name && p.name.toLowerCase().includes(val)) || 
+                (p.category && p.category.toLowerCase().includes(val))
+            );
+            render(searchRes);
+        }
+
+        function toggleDropdown(e) {
+            e.stopPropagation();
+            document.getElementById('menuDropdown').classList.toggle('show');
+        }
+
+        function updateBadges() {
+            const cart = JSON.parse(localStorage.getItem('myCart')) || [];
+            const wish = JSON.parse(localStorage.getItem('myWishlist')) || [];
+            const cb = document.getElementById('cartBadgeIndex');
+            const wb = document.getElementById('wishBadge');
+            if(cb && cart.length > 0) { cb.innerText = cart.length; cb.style.display = 'flex'; }
+            if(wb && wish.length > 0) { wb.innerText = wish.length; wb.style.display = 'flex'; }
+        }
+
+        function openProduct(id) { window.location.href = `details.html?id=${id}`; }
+        window.onclick = () => { document.getElementById('menuDropdown').classList.remove('show'); };
+        window.onload = loadStoreData;
+    </script>
+</body>
+</html>

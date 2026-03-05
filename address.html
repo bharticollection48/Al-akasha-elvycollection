@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al akasha elvy lifestyle collection</title>
+    
+    <link rel="icon" type="image/png" href="https://img.freepik.com/premium-vector/shopping-logo-vector-icon_636116-200.jpg?semt=ais_hybrid&w=740&q=80"> 
+    <link rel="stylesheet" href="address.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="nav">
+        <i class="fa-solid fa-arrow-left" onclick="history.back()"></i>
+        <span>Delivery Address</span>
+    </div>
+
+    <div class="form-container">
+        <h3 class="section-title">Contact Details</h3>
+        
+        <div class="input-group">
+            <label><i class="fa-solid fa-user"></i> Full Name*</label>
+            <input type="text" id="custName" placeholder="Recipient's Name">
+        </div>
+
+        <div class="input-group">
+            <label><i class="fa-solid fa-phone"></i> Phone Number*</label>
+            <input type="number" id="custPhone" placeholder="10 Digit mobile number">
+        </div>
+
+        <div class="input-group">
+            <label><i class="fa-solid fa-phone-flip"></i> Alternative Phone (Optional)</label>
+            <input type="number" id="custPhone2" placeholder="Secondary mobile number">
+        </div>
+
+        <hr style="border:0.5px solid #eee; margin:25px 0;">
+        <h3 class="section-title">Address Details</h3>
+
+        <div class="input-group">
+            <label><i class="fa-solid fa-house"></i> House No. / Building Name*</label>
+            <input type="text" id="custHouse" placeholder="Ex: Flat 101, Ghaba Apartments">
+        </div>
+
+        <div class="input-group">
+            <label><i class="fa-solid fa-road"></i> Road Name / Area / Colony*</label>
+            <input type="text" id="custAddress" placeholder="Ex: Near Main Market, Sector 12">
+        </div>
+
+        <div class="input-group">
+            <label><i class="fa-solid fa-location-dot"></i> Landmark (Optional)</label>
+            <input type="text" id="custLandmark" placeholder="Ex: Near Temple, School">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <div class="input-group" style="flex:1">
+                <label>Pincode*</label>
+                <input type="number" id="custPin" placeholder="6 Digit">
+            </div>
+            <div class="input-group" style="flex:1">
+                <label>City*</label>
+                <input type="text" id="custCity" placeholder="City Name">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>State*</label>
+            <select id="custState">
+                <option value="">Select State</option>
+
+                <!-- States -->
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+
+                <!-- Union Territories -->
+                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Dadra and Nagar Haveli and Daman and Diu">
+                    Dadra and Nagar Haveli and Daman and Diu
+                </option>
+                <option value="Delhi">Delhi</option>
+                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Puducherry">Puducherry</option>
+
+            </select>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="total-info">
+            <span id="finalPriceDisplay" style="font-weight:bold; font-size:18px;">₹0</span> 
+            <br>
+            <small style="color:#2e7d32; font-weight:bold;">
+                <i class="fa-solid fa-qrcode"></i> UPI QR Payment
+            </small>
+        </div>
+        <button onclick="confirmOrder()" class="final-btn">CONFIRM ORDER</button>
+    </div>
+
+    <script>
+        // --- 1. Price Sync Logic ---
+        let finalPrice = 0;
+
+        window.onload = function() {
+
+            let buyNowProduct = JSON.parse(localStorage.getItem('buyNowItem'));
+            let cartTotal = localStorage.getItem('cartTotal');
+
+            if (buyNowProduct) {
+                finalPrice = Number(buyNowProduct.price);
+            } else if (cartTotal) {
+                finalPrice = Number(cartTotal);
+            } else {
+                let cartProducts = JSON.parse(localStorage.getItem('myCart')) || [];
+                finalPrice = cartProducts.reduce((sum, p) => sum + Number(p.price), 0);
+            }
+
+            document.getElementById('finalPriceDisplay').innerText = "₹" + finalPrice;
+
+            // 🔥 IMPORTANT: Save price for QR page
+            localStorage.setItem("checkoutPrice", finalPrice);
+        };
+
+        // --- 2. Validation & Confirmation Logic ---
+        function confirmOrder() {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const house = document.getElementById('custHouse').value.trim();
+            const area = document.getElementById('custAddress').value.trim();
+            const pin = document.getElementById('custPin').value.trim();
+            const city = document.getElementById('custCity').value.trim();
+            const state = document.getElementById('custState').value;
+
+            if(!name || !phone || !house || !area || !pin || !city || !state) {
+                alert("Kripya saari (*) wali details bharein!");
+                return;
+            }
+
+            if(phone.length !== 10) {
+                alert("Mobile number 10 digit ka hona chahiye!");
+                return;
+            }
+
+            const orderDetails = {
+                customerName: name,
+                customerPhone: phone,
+                address: `${house}, ${area}, ${city}, ${state} - ${pin}`,
+                totalAmount: finalPrice,
+                paymentMethod: "UPI QR Payment",
+                orderDate: new Date().toLocaleString()
+            };
+
+            localStorage.setItem('lastOrderAddress', JSON.stringify(orderDetails));
+
+            localStorage.removeItem('buyNowItem');
+
+            window.location.href = 'qr.html';
+        }
+    </script>
+</body>
+</html>

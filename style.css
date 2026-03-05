@@ -1,0 +1,470 @@
+/* --- Global Luxury Setup --- */
+:root {
+    --gold: #d4af37;        /* Premium Gold */
+    --gold-dark: #b8860b;
+    --black: #1a1a1a;       /* Deep Royal Black */
+    --white: #ffffff;
+    --soft-white: #fdfaf6;  /* Luxury Background */
+    --gray-light: #f4f4f4;
+    --text-muted: #666;
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--soft-white);
+    color: var(--black);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* --- Typography --- */
+h1, h2, h3, .logo {
+    font-family: 'Cinzel', serif;
+}
+
+/* --- Header Styling --- */
+.main-header {
+    background: var(--white);
+    padding: 15px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--black);
+    cursor: pointer;
+}
+
+.logo span {
+    color: var(--gold);
+}
+
+.header-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.icon-btn {
+    font-size: 20px;
+    color: var(--black);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+
+.icon-btn:hover {
+    color: var(--gold);
+}
+
+/* --- Search Overlay --- */
+.search-overlay {
+    position: fixed;
+    top: -120px; /* Hidden by default */
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.4s ease-in-out;
+    z-index: 999;
+}
+
+.search-overlay.active {
+    top: 0;
+}
+
+.search-bar-inner {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-bar-inner input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.search-bar-inner i {
+    cursor: pointer;
+    color: var(--black);
+    font-size: 20px;
+}
+
+/* --- Hero Banner --- */
+.hero-banner {
+    height: 450px;
+    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=1920&auto=format&fit=crop') center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--white);
+    padding: 0 20px;
+}
+
+.hero-subtext {
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.hero-title {
+    font-size: 42px;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.hero-title span {
+    color: var(--gold);
+}
+
+.hero-btn {
+    background: var(--gold);
+    color: var(--white);
+    border: none;
+    padding: 12px 35px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.hero-btn:hover {
+    background: var(--black);
+    transform: translateY(-2px);
+}
+
+/* --- Category Section --- */
+.section-heading {
+    text-align: center;
+    padding: 50px 20px 30px;
+}
+
+.section-heading h3 {
+    font-size: 28px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.gold-line {
+    width: 60px;
+    height: 3px;
+    background: var(--gold);
+    margin: 0 auto;
+}
+
+.category-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 20px;
+}
+
+.cat-card {
+    text-align: center;
+    cursor: pointer;
+    width: 140px;
+    transition: var(--transition);
+}
+
+.cat-img-box {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: var(--transition);
+    margin-bottom: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.cat-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cat-card p {
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cat-card:hover .cat-img-box, 
+.active-cat .cat-img-box {
+    border-color: var(--gold);
+    transform: scale(1.08);
+}
+
+/* --- Product Grid --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.p-card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.p-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.p-img-wrapper {
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+}
+
+.p-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.p-card:hover .p-img-wrapper img {
+    transform: scale(1.1);
+}
+
+.p-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: var(--gold);
+    color: white;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.p-details {
+    padding: 15px;
+}
+
+.p-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--black);
+}
+
+.p-price-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.p-price {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--black);
+}
+
+.p-old-price {
+    text-decoration: line-through;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.p-shipping {
+    color: #27ae60;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* --- Badges & Dropdown --- */
+.wishlist-wrapper, .cart-wrapper { position: relative; }
+
+.wish-badge, .cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    border: 1px solid var(--white);
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 55px;
+    right: 0;
+    background: var(--white);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    min-width: 200px;
+    overflow: hidden;
+    border: 1px solid var(--gray-light);
+}
+
+.dropdown-menu.show { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: var(--black);
+    font-size: 14px;
+    border-bottom: 1px solid var(--gray-light);
+    transition: var(--transition);
+}
+
+.dropdown-menu a i { margin-right: 10px; color: var(--gold); }
+
+.dropdown-menu a:hover {
+    background: var(--soft-white);
+    padding-left: 25px;
+}
+
+/* --- WhatsApp - FIXED (SCREEN KE ANDAR RAHEGA) --- */
+.wa-container {
+    position: fixed;
+    bottom: 20px; /* मोबाइल पर थोड़ा ऊपर */
+    right: 15px;  /* स्क्रीन के किनारे से सुरक्षित दूरी */
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    max-width: 80%; /* स्क्रीन से बाहर न जाए इसलिए लिमिट */
+}
+
+.wa-msg-pop {
+    background: var(--white);
+    padding: 6px 14px;
+    border-radius: 15px 15px 2px 15px; /* प्रीमियम चैट लुक */
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin-bottom: 8px;
+    border: 1.5px solid var(--gold);
+    white-space: normal; /* टेक्स्ट लंबा हो तो नीचे चला जाए, बाहर न जाए */
+    text-align: right;
+    animation: bounce 2s infinite;
+    color: var(--black);
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-6px);}
+    60% {transform: translateY(-3px);}
+}
+
+.whatsapp-modern {
+    background: #25d366;
+    color: white;
+    width: 55px;  /* थोड़ा छोटा ताकि स्क्रीन न घेरे */
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(37,211,102,0.35);
+    transition: var(--transition);
+}
+
+.whatsapp-modern:hover {
+    transform: scale(1.1);
+}
+
+/* --- Loader & Empty State --- */
+.loader-box {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 80px 0;
+    color: var(--gold);
+}
+
+.empty-msg {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 50px;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+/* --- Responsive Media Queries --- */
+@media (max-width: 768px) {
+    .hero-banner { height: 350px; }
+    .hero-title { font-size: 32px; }
+    .product-grid { gap: 12px; padding: 12px; }
+    .p-img-wrapper { height: 230px; }
+}
+
+@media (max-width: 480px) {
+    .logo { font-size: 22px; letter-spacing: 2px; }
+    .hero-title { font-size: 28px; }
+    .p-img-wrapper { height: 200px; }
+    .category-container { gap: 15px; }
+    .cat-card { width: 100px; }
+    .cat-card p { font-size: 11px; }
+    
+    /* मोबाइल पर WhatsApp को और सुरक्षित बनाना */
+    .wa-container { bottom: 15px; right: 10px; }
+    .wa-msg-pop { font-size: 11px; padding: 5px 10px; max-width: 180px; }
+    .whatsapp-modern { width: 50px; height: 50px; font-size: 26px; }
+}
