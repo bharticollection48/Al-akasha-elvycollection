@@ -23,52 +23,39 @@ async function fetchServerSettings() {
     }
 }
 
-// --- 3. Security Check (Anti-Reload Password Fix) ---
+// --- 3. Security Check ---
 window.onload = async function() {
-    // Check karein kya isi session mein pehle login kiya tha?
     const alreadyLoggedIn = sessionStorage.getItem('isGhabaAdmin');
-    
     const serverProducts = await fetchServerSettings();
     const latestPass = localStorage.getItem('adminPassword') || "admin123";
 
     if (alreadyLoggedIn === "true") {
-        // Agar pehle se login hai toh seedha andar bhejo
         document.body.style.display = "block";
         displayAdminProducts(serverProducts);
     } else {
-        // Agar naya session hai toh password pucho
         let userEntry = prompt("Enter Admin Password:");
         if (userEntry === latestPass) {
-            sessionStorage.setItem('isGhabaAdmin', "true"); // Session mein login save karo
+            sessionStorage.setItem('isGhabaAdmin', "true");
             document.body.style.display = "block";
             displayAdminProducts(serverProducts);
         } else {
-            alert("Access Denied! Galat Password.");
+            alert("Access Denied!");
             window.location.href = "index.html";
         }
     }
 };
 
-// --- 4. Server Update Logic (No Page Reload) ---
+// --- 4. Settings Update ---
 async function syncSettingsToServer(newUpi, newPass) {
-    const data = {
-        type: "updateSettings",
-        upi: newUpi,
-        password: newPass
-    };
-
+    const data = { type: "updateSettings", upi: newUpi, password: newPass };
     if(typeof showLoader === "function") showLoader(true);
-
     try {
         await fetch(GOOGLE_SHEET_URL, {
             method: 'POST',
             mode: 'no-cors', 
             body: JSON.stringify(data)
         });
-
         alert("Server updated successfully! ✅");
-        
-        // Refresh ki jagah sirf data reload karo
         const updatedProducts = await fetchServerSettings();
         displayAdminProducts(updatedProducts);
     } catch (error) {
@@ -90,17 +77,31 @@ function updatePass() {
     if(newPass.length >= 4) syncSettingsToServer(currentUPI, newPass);
 }
 
-// --- 5. Photo Upload (ImgBB) ---
-async function autoUrl(input, slot) {
+// --- 5. Media Upload (Images & Video Handling) ---
+// Note: ImgBB doesn't support video. For video, we use a different approach or direct Base64 if small.
+async function processMedia(input, slotOrId, previewId) {
     const file = input.files[0];
     if (!file) return;
 
-    const previewImg = document.getElementById(`pre${slot}`);
-    const urlInput = document.getElementById(`url${slot}`);
-    const btnSpan = input.previousElementSibling; 
+    // Check if it's a video
+    if (file.type.startsWith('video/')) {
+        if (file.size > 15 * 1024 * 1024) { // 15MB Limit
+            alert("Video file too large! Please keep it under 15MB.");
+            return;
+        }
+        uploadVideoDirectly(file);
+        return;
+    }
 
+    // If it's an image, use ImgBB
+    uploadImageToImgBB(file, slotOrId, previewId, input);
+}
+
+// Image Upload Logic
+async function uploadImageToImgBB(file, slot, previewId, input) {
+    const btnSpan = input.previousElementSibling; 
     if (btnSpan) btnSpan.innerText = "Wait...";
-    if (previewImg) previewImg.style.opacity = "0.3";
+    if(typeof showLoader === "function") showLoader(true, "Uploading Image...");
 
     const formData = new FormData();
     formData.append("image", file);
@@ -111,44 +112,53 @@ async function autoUrl(input, slot) {
             body: formData
         });
         const data = await response.json();
-
         if (data.success) {
-            urlInput.value = data.data.url;
-            if (previewImg) {
-                previewImg.src = data.data.url;
-                previewImg.style.opacity = "1";
-            }
+            document.getElementById(`url${slot}`).value = data.data.url;
+            if (previewId) document.getElementById(previewId).src = data.data.url;
             if (btnSpan) btnSpan.innerText = "Done ✅";
         }
     } catch (error) {
         alert("Photo upload fail!");
+    } finally {
+        if(typeof showLoader === "function") showLoader(false);
     }
 }
 
-// --- 6. Save Product (No Page Reload Fix) ---
+// Video Reading Logic (Convert to Base64)
+function uploadVideoDirectly(file) {
+    if(typeof showLoader === "function") showLoader(true, "Reading Video File...");
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('pVideo').value = e.target.result;
+        if(document.getElementById('vidStatus')) document.getElementById('vidStatus').style.display = 'block';
+        if(typeof showLoader === "function") showLoader(false);
+        alert("Video loaded! Click Publish to save.");
+    };
+    reader.readAsDataURL(file);
+}
+
+// --- 6. Save Product ---
 async function saveProduct() {
     const name = document.getElementById('pName').value.trim();
     const price = document.getElementById('pPrice').value.trim();
     const category = document.getElementById('pCategory').value;
     const video = document.getElementById('pVideo').value.trim();
 
-    const gallery = [
-        document.getElementById('url1').value,
-        document.getElementById('url2').value,
-        document.getElementById('url3').value,
-        document.getElementById('url4').value,
-        document.getElementById('url5').value
-    ].filter(url => url.trim() !== "");
+    const gallery = [];
+    for(let i=1; i<=5; i++) {
+        let val = document.getElementById(`url${i}`).value.trim();
+        if(val) gallery.push(val);
+    }
 
     if (!name || !price || gallery.length === 0) {
-        alert("Details bhariye!");
+        alert("Please enter Name, Price and at least one Image!");
         return;
     }
 
     const submitBtn = document.getElementById('publishBtn');
-    submitBtn.innerText = "PUBLISHING...";
+    submitBtn.innerText = "SAVING TO CLOUD...";
     submitBtn.disabled = true;
-    if(typeof showLoader === "function") showLoader(true);
+    if(typeof showLoader === "function") showLoader(true, "Publishing to Google Sheets...");
 
     const newProduct = {
         id: Date.now(),
@@ -161,29 +171,32 @@ async function saveProduct() {
     };
 
     try {
+        // We use POST with no-cors. If file is too big, this might still fail.
         await fetch(GOOGLE_SHEET_URL, {
             method: 'POST',
             mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newProduct)
         });
 
-        alert("Product Published! ✅");
+        alert("Product Successfully Saved to Google Sheets! ✅");
 
-        // Form ko khali karo (Refesh ki zaroorat nahi)
+        // Clear Form
         document.getElementById('pName').value = "";
         document.getElementById('pPrice').value = "";
         document.getElementById('pVideo').value = "";
+        if(document.getElementById('vidStatus')) document.getElementById('vidStatus').style.display = 'none';
         for(let i=1; i<=5; i++){
             document.getElementById(`url${i}`).value = "";
             document.getElementById(`pre${i}`).src = "https://via.placeholder.com/50";
         }
 
-        // List update karo bina refresh ke
         const freshProducts = await fetchServerSettings();
         displayAdminProducts(freshProducts);
 
     } catch (error) {
-        alert("Server error!");
+        console.error(error);
+        alert("Error saving product. Check your internet or file size.");
     } finally {
         submitBtn.innerText = "PUBLISH TO STORE";
         submitBtn.disabled = false;
@@ -200,13 +213,12 @@ function displayAdminProducts(products) {
         <div class="p-card">
             <img src="${p.mainImg}">
             <p style="font-size:12px; font-weight:bold; margin:5px 0;">${p.name}</p>
-            <p style="color:#ff4757; font-weight:bold;">₹${p.price}</p>
+            <p style="color:#f10c59; font-weight:bold;">₹${p.price}</p>
         </div>
     `).join('');
 }
 
 function logout() { 
-    localStorage.clear(); 
     sessionStorage.clear();
     window.location.href = "index.html"; 
 }
