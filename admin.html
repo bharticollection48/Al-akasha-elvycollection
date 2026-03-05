@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al akasha elvy lifestyle collection - Admin</title>
+    <title>Admin Panel - Al Akasha Elvy</title>
     
     <link rel="icon" type="image/png" href="https://img.freepik.com/premium-vector/shopping-logo-vector-icon_636116-200.jpg?semt=ais_hybrid&w=740&q=80"> 
     
@@ -22,7 +22,6 @@
         input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box; outline: none; }
         input:focus { border-color: var(--meesho-pink); }
         
-        /* Current Status Badge */
         .status-badge { background: #fdf7fe; padding: 15px; border-radius: 8px; border: 1px solid #e1bee7; margin-bottom: 20px; display: flex; justify-content: space-around; text-align: center; }
         .status-badge div { flex: 1; }
         .status-badge b { color: var(--meesho-pink); display: block; font-size: 16px; margin-top: 5px; word-break: break-all; }
@@ -30,7 +29,7 @@
         .media-box { background: #fdf7fe; padding: 15px; border-radius: 8px; border: 1px dashed var(--meesho-pink); margin-bottom: 15px; }
         .media-row { display: grid; grid-template-columns: 1fr 80px 50px; gap: 10px; margin-bottom: 10px; align-items: center; }
         
-        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
+        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
         .file-input-wrapper input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         .btn-file { background: #fff; border: 1px solid var(--meesho-pink); color: var(--meesho-pink); padding: 8px; border-radius: 5px; display: block; text-align: center; font-size: 11px; font-weight: bold; cursor: pointer; }
 
@@ -45,22 +44,16 @@
         .p-card { background: white; padding: 10px; border-radius: 8px; border: 1px solid #eee; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .p-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 5px; margin-bottom: 8px; }
         
-        .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 600px) { .settings-grid { grid-template-columns: 1fr; } }
-
-        /* Loader */
         #loader-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--meesho-pink); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .video-status { font-size: 11px; color: #2ecc71; display: none; font-weight: bold; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div id="loader-overlay">
         <div class="spinner"></div>
-        <p id="loader-text" style="margin-top:10px; color:var(--meesho-pink); font-weight:bold;">Processing...</p>
+        <p style="margin-top:10px; color:var(--meesho-pink); font-weight:bold;">Processing...</p>
     </div>
 
     <div class="admin-header">
@@ -78,7 +71,7 @@
                 <div style="border-left: 1px solid #ddd;">Current Password <b id="currentPassText">Loading...</b></div>
             </div>
 
-            <div class="settings-grid">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" class="settings-grid">
                 <div class="input-group">
                     <label>Change UPI ID</label>
                     <input type="text" id="adminUPI" placeholder="newid@upi">
@@ -97,7 +90,7 @@
             
             <div class="input-group">
                 <label>Product Name*</label>
-                <input type="text" id="pName" placeholder="Ex: Designer Saree or Gift Box">
+                <input type="text" id="pName" placeholder="Ex: Designer Saree">
             </div>
 
             <div style="display: flex; gap: 10px;">
@@ -110,12 +103,12 @@
                     <select id="pCategory">
                         <option value="SAREE">Saree</option>
                         <option value="KURTIS">Kurtis & Dress</option>
-                        <option value="GIFT">Gift Packing</option>
+                        <option value="GIFT">Exclusive Gifts</option>
                     </select>
                 </div>
             </div>
 
-            <label><i class="fa-solid fa-images"></i> Media (Photos & Video)</label>
+            <label><i class="fa-solid fa-images"></i> Product Photos (Max 7)</label>
             <div class="media-box">
                 <div class="media-row">
                     <input type="text" id="url1" placeholder="Main Image URL*">
@@ -157,12 +150,21 @@
                     </div>
                     <img id="pre5" class="thumb-preview" src="https://via.placeholder.com/50">
                 </div>
-                
-                <hr style="border: 0.5px solid #eee; margin: 15px 0;">
-                
-                <label>Product Video (Paste Any Link Below)</label>
-                <div class="input-group">
-                    <input type="text" id="pVideo" placeholder="Paste YouTube, Drive or any Video Link here">
+                <div class="media-row">
+                    <input type="text" id="url6" placeholder="Image 6 URL">
+                    <div class="file-input-wrapper">
+                        <span class="btn-file">Gallery</span>
+                        <input type="file" accept="image/*" onchange="processMedia(this, 'url6', 'pre6')">
+                    </div>
+                    <img id="pre6" class="thumb-preview" src="https://via.placeholder.com/50">
+                </div>
+                <div class="media-row">
+                    <input type="text" id="url7" placeholder="Image 7 URL">
+                    <div class="file-input-wrapper">
+                        <span class="btn-file">Gallery</span>
+                        <input type="file" accept="image/*" onchange="processMedia(this, 'url7', 'pre7')">
+                    </div>
+                    <img id="pre7" class="thumb-preview" src="https://via.placeholder.com/50">
                 </div>
             </div>
 
@@ -173,44 +175,16 @@
             <h3 style="margin-top:30px; color: var(--meesho-pink); border-bottom: 2px solid #ddd; padding-bottom: 10px;">
                 <i class="fa-solid fa-boxes-stacked"></i> Live Inventory
             </h3>
-            <div class="preview-grid" id="adminProductList">
-                </div>
+            <div class="preview-grid" id="adminProductList"></div>
         </div>
     </div>
 
     <script src="admin.js"></script>
     <script>
         function showLoader(show, text = "Processing...") {
-            document.getElementById('loader-overlay').style.display = show ? 'flex' : 'none';
-            document.getElementById('loader-text').innerText = text;
-        }
-
-        // Media Processing Function (Images only - Video removed from here to allow direct links)
-        function processMedia(input, targetInputId, previewImgId) {
-            const file = input.files[0];
-            if (!file) return;
-
-            showLoader(true, "Processing file...");
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Data = e.target.result;
-                
-                document.getElementById(targetInputId).value = base64Data;
-                
-                if (previewImgId) {
-                    document.getElementById(previewImgId).src = base64Data;
-                }
-                
-                showLoader(false);
-            };
-
-            reader.onerror = function() {
-                alert("फाइल लोड करने में समस्या आई।");
-                showLoader(false);
-            };
-
-            reader.readAsDataURL(file);
+            const overlay = document.getElementById('loader-overlay');
+            overlay.querySelector('p').innerText = text;
+            overlay.style.display = show ? 'flex' : 'none';
         }
     </script>
 </body>

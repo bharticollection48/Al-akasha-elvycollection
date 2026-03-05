@@ -1,13 +1,20 @@
-/* --- Global Luxury Setup --- */
+/* Project: Al Akasha Elvy Lifestyle - Premium Theme
+   Palette: Midnight Black, Rose Gold, & Pearl White
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
 :root {
-    --gold: #d4af37;        /* Premium Gold */
-    --gold-dark: #b8860b;
-    --black: #1a1a1a;       /* Deep Royal Black */
-    --white: #ffffff;
-    --soft-white: #fdfaf6;  /* Luxury Background */
-    --gray-light: #f4f4f4;
-    --text-muted: #666;
-    --transition: all 0.3s ease;
+    --gold: #d4af37;           /* Classic Gold */
+    --rose-gold: #e5b4a2;      /* Soft Rose Gold */
+    --royal-dark: #0f0f0f;     /* Deep Matte Black */
+    --velvet-black: #1a1a1a;   /* Light Black */
+    --pearl-white: #fdfaf6;    /* Luxury Background */
+    --pure-white: #ffffff;
+    --glass: rgba(255, 255, 255, 0.9);
+    --text-muted: #7a7a7a;
+    --luxury-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 * {
@@ -19,43 +26,51 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--soft-white);
-    color: var(--black);
+    background-color: var(--pearl-white);
+    color: var(--royal-dark);
     overflow-x: hidden;
     line-height: 1.6;
 }
 
 /* --- Typography --- */
-h1, h2, h3, .logo {
+h1, h2, h3, .logo, .hero-title, .p-name-detail {
     font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
 }
 
-/* --- Header Styling --- */
+/* --- Premium Header (Glassmorphism) --- */
 .main-header {
-    background: var(--white);
-    padding: 15px 20px;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    padding: 12px 20px;
 }
 
 .header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .logo {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 700;
     letter-spacing: 3px;
-    color: var(--black);
+    color: var(--royal-dark);
     cursor: pointer;
+    text-decoration: none;
 }
 
 .logo span {
     color: var(--gold);
+    font-size: 16px;
+    font-weight: 400;
 }
 
 .header-icons {
@@ -66,7 +81,7 @@ h1, h2, h3, .logo {
 
 .icon-btn {
     font-size: 20px;
-    color: var(--black);
+    color: var(--royal-dark);
     cursor: pointer;
     transition: var(--transition);
     position: relative;
@@ -74,182 +89,208 @@ h1, h2, h3, .logo {
 
 .icon-btn:hover {
     color: var(--gold);
+    transform: translateY(-2px);
+}
+
+/* --- Badge Styling --- */
+.wish-badge, .cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: var(--royal-dark);
+    color: var(--gold);
+    font-size: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 1px solid var(--gold);
 }
 
 /* --- Search Overlay --- */
 .search-overlay {
     position: fixed;
-    top: -120px; /* Hidden by default */
+    top: -100px;
     left: 0;
     width: 100%;
-    background: var(--white);
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: 0.4s ease-in-out;
-    z-index: 999;
-}
-
-.search-overlay.active {
-    top: 0;
-}
-
-.search-bar-inner {
-    max-width: 600px;
-    margin: 0 auto;
+    background: var(--pure-white);
+    padding: 15px 20px;
+    box-shadow: var(--luxury-shadow);
+    transition: var(--transition);
+    z-index: 1100;
     display: flex;
     align-items: center;
-    gap: 15px;
+    justify-content: center;
+}
+
+.search-overlay.active { top: 0; }
+
+.search-bar-inner {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    align-items: center;
+    background: #f5f5f5;
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.search-bar-inner:focus-within {
+    border-color: var(--gold);
+    background: #fff;
 }
 
 .search-bar-inner input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--gold);
-    border-radius: 5px;
+    flex: 1;
+    border: none;
+    background: transparent;
     outline: none;
-    font-family: 'Poppins', sans-serif;
-}
-
-.search-bar-inner i {
-    cursor: pointer;
-    color: var(--black);
-    font-size: 20px;
+    font-family: 'Poppins';
+    padding-left: 10px;
 }
 
 /* --- Hero Banner --- */
 .hero-banner {
-    height: 450px;
-    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+    height: 500px;
+    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), 
                 url('https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=1920&auto=format&fit=crop') center/cover;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: var(--white);
-    padding: 0 20px;
+    color: var(--pure-white);
+    margin-bottom: 40px;
+    position: relative;
 }
 
 .hero-subtext {
+    font-family: 'Cinzel';
     font-size: 14px;
-    letter-spacing: 4px;
+    letter-spacing: 5px;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    opacity: 0.9;
 }
 
 .hero-title {
-    font-size: 42px;
-    margin-bottom: 20px;
-    line-height: 1.2;
+    font-size: 48px;
+    margin-bottom: 25px;
+    font-weight: 700;
 }
 
-.hero-title span {
-    color: var(--gold);
-}
+.hero-title span { color: var(--gold); }
 
 .hero-btn {
-    background: var(--gold);
-    color: var(--white);
-    border: none;
-    padding: 12px 35px;
-    font-family: 'Poppins', sans-serif;
+    background: transparent;
+    color: white;
+    border: 1.5px solid var(--gold);
+    padding: 12px 40px;
+    font-family: 'Poppins';
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    border-radius: 50px;
     cursor: pointer;
     transition: var(--transition);
 }
 
 .hero-btn:hover {
-    background: var(--black);
-    transform: translateY(-2px);
-}
-
-/* --- Category Section --- */
-.section-heading {
-    text-align: center;
-    padding: 50px 20px 30px;
-}
-
-.section-heading h3 {
-    font-size: 28px;
-    margin-bottom: 12px;
-    letter-spacing: 1px;
-}
-
-.gold-line {
-    width: 60px;
-    height: 3px;
     background: var(--gold);
-    margin: 0 auto;
+    color: var(--royal-dark);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
 }
 
+/* --- Category Circular Section --- */
 .category-container {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 30px;
+    gap: 25px;
     padding: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
 }
 
+.category-container::-webkit-scrollbar { display: none; }
+
 .cat-card {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100px;
     cursor: pointer;
-    width: 140px;
     transition: var(--transition);
 }
 
 .cat-img-box {
-    width: 100%;
-    aspect-ratio: 1/1;
+    width: 85px;
+    height: 85px;
     border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid transparent;
+    padding: 4px;
+    border: 2px solid #eee;
+    background: #fff;
+    margin-bottom: 10px;
     transition: var(--transition);
-    margin-bottom: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
-.cat-card img {
+.cat-img-box img {
     width: 100%;
     height: 100%;
+    border-radius: 50%;
     object-fit: cover;
 }
 
 .cat-card p {
+    font-size: 12px;
     font-weight: 600;
-    font-size: 14px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
 }
 
-.cat-card:hover .cat-img-box, 
-.active-cat .cat-img-box {
+.cat-card:hover .cat-img-box, .active-cat .cat-img-box {
     border-color: var(--gold);
-    transform: scale(1.08);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
 }
 
-/* --- Product Grid --- */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+.active-cat p { color: var(--gold); }
+
+/* --- Product Grid & Cards --- */
+.feed-section {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
+.section-heading { text-align: center; margin-bottom: 40px; }
+.section-heading h3 { font-size: 28px; margin-bottom: 10px; }
+.gold-line { width: 60px; height: 3px; background: var(--gold); margin: 0 auto; }
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
 .p-card {
-    background: var(--white);
-    border-radius: 12px;
+    background: var(--pure-white);
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.03);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.02);
     transition: var(--transition);
-    cursor: pointer;
 }
 
 .p-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transform: translateY(-8px);
+    box-shadow: var(--luxury-shadow);
 }
 
 .p-img-wrapper {
@@ -262,209 +303,151 @@ h1, h2, h3, .logo {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.8s ease;
 }
 
-.p-card:hover .p-img-wrapper img {
-    transform: scale(1.1);
-}
+.p-card:hover .p-img-wrapper img { transform: scale(1.1); }
 
-.p-tag {
+.p-offer-tag {
     position: absolute;
-    bottom: 12px;
+    top: 12px;
     left: 12px;
-    background: var(--gold);
-    color: white;
+    background: var(--royal-dark);
+    color: var(--gold);
     font-size: 10px;
-    padding: 4px 10px;
-    border-radius: 4px;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    padding: 5px 12px;
+    border-radius: 5px;
+    border: 0.5px solid var(--gold);
 }
 
-.p-details {
-    padding: 15px;
-}
+.p-details { padding: 18px; }
 
 .p-name {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 600;
-    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--royal-dark);
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--black);
 }
 
 .p-price-row {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 8px 0;
+    align-items: baseline;
+    gap: 8px;
 }
 
-.p-price {
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--black);
-}
-
-.p-old-price {
-    text-decoration: line-through;
-    color: var(--text-muted);
-    font-size: 13px;
-}
+.p-price { font-size: 18px; font-weight: 700; color: var(--royal-dark); }
+.p-old-price { font-size: 13px; text-decoration: line-through; color: var(--text-muted); }
 
 .p-shipping {
+    font-size: 11px;
     color: #27ae60;
-    font-size: 12px;
     font-weight: 600;
-    margin: 0;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* --- Badges & Dropdown --- */
-.wishlist-wrapper, .cart-wrapper { position: relative; }
-
-.wish-badge, .cart-badge {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background: var(--gold);
-    color: var(--black);
-    font-size: 10px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    border: 1px solid var(--white);
-}
-
+/* --- Dropdown Menu --- */
 .dropdown-menu {
-    display: none;
     position: absolute;
-    top: 55px;
-    right: 0;
-    background: var(--white);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    border-radius: 8px;
-    min-width: 200px;
+    top: 65px;
+    right: 20px;
+    background: var(--pure-white);
+    min-width: 220px;
+    border-radius: 15px;
+    box-shadow: var(--luxury-shadow);
+    display: none;
     overflow: hidden;
-    border: 1px solid var(--gray-light);
+    z-index: 1001;
+    border: 1px solid rgba(0,0,0,0.05);
 }
 
-.dropdown-menu.show { display: block; animation: fadeIn 0.3s ease; }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+.dropdown-menu.show { display: block; animation: slideIn 0.3s ease-out; }
 
 .dropdown-menu a {
-    display: block;
     padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     text-decoration: none;
-    color: var(--black);
+    color: var(--royal-dark);
     font-size: 14px;
-    border-bottom: 1px solid var(--gray-light);
-    transition: var(--transition);
+    transition: 0.3s;
+    border-bottom: 1px solid #f9f9f9;
 }
 
-.dropdown-menu a i { margin-right: 10px; color: var(--gold); }
+.dropdown-menu a i { color: var(--gold); font-size: 16px; }
+.dropdown-menu a:hover { background: var(--pearl-white); padding-left: 25px; color: var(--gold); }
 
-.dropdown-menu a:hover {
-    background: var(--soft-white);
-    padding-left: 25px;
-}
-
-/* --- WhatsApp - FIXED (SCREEN KE ANDAR RAHEGA) --- */
+/* --- WhatsApp (Secure & Premium) --- */
 .wa-container {
     position: fixed;
-    bottom: 20px; /* मोबाइल पर थोड़ा ऊपर */
-    right: 15px;  /* स्क्रीन के किनारे से सुरक्षित दूरी */
+    bottom: 25px;
+    right: 20px;
     z-index: 2000;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    max-width: 80%; /* स्क्रीन से बाहर न जाए इसलिए लिमिट */
 }
 
 .wa-msg-pop {
-    background: var(--white);
-    padding: 6px 14px;
-    border-radius: 15px 15px 2px 15px; /* प्रीमियम चैट लुक */
+    background: var(--royal-dark);
+    color: var(--gold);
+    padding: 8px 15px;
+    border-radius: 15px 15px 2px 15px;
     font-size: 12px;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    margin-bottom: 8px;
-    border: 1.5px solid var(--gold);
-    white-space: normal; /* टेक्स्ट लंबा हो तो नीचे चला जाए, बाहर न जाए */
-    text-align: right;
-    animation: bounce 2s infinite;
-    color: var(--black);
+    margin-bottom: 10px;
+    border: 1px solid var(--gold);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    animation: wa-bounce 3s infinite;
 }
 
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-    40% {transform: translateY(-6px);}
-    60% {transform: translateY(-3px);}
+@keyframes wa-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }
 
 .whatsapp-modern {
-    background: #25d366;
-    color: white;
-    width: 55px;  /* थोड़ा छोटा ताकि स्क्रीन न घेरे */
-    height: 55px;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    width: 58px;
+    height: 58px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: white;
     font-size: 30px;
     text-decoration: none;
-    box-shadow: 0 8px 20px rgba(37,211,102,0.35);
+    box-shadow: 0 10px 25px rgba(37,211,102,0.3);
     transition: var(--transition);
 }
 
-.whatsapp-modern:hover {
-    transform: scale(1.1);
-}
+.whatsapp-modern:hover { transform: scale(1.1) rotate(10deg); }
 
-/* --- Loader & Empty State --- */
-.loader-box {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 80px 0;
-    color: var(--gold);
-}
-
-.empty-msg {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 50px;
-    font-style: italic;
-    color: var(--text-muted);
-}
-
-/* --- Responsive Media Queries --- */
+/* --- Mobile Responsive --- */
 @media (max-width: 768px) {
-    .hero-banner { height: 350px; }
-    .hero-title { font-size: 32px; }
-    .product-grid { gap: 12px; padding: 12px; }
-    .p-img-wrapper { height: 230px; }
+    .hero-banner { height: 400px; }
+    .hero-title { font-size: 34px; }
+    .product-grid { gap: 15px; }
+    .p-img-wrapper { height: 220px; }
 }
 
 @media (max-width: 480px) {
-    .logo { font-size: 22px; letter-spacing: 2px; }
+    .logo { font-size: 20px; }
     .hero-title { font-size: 28px; }
-    .p-img-wrapper { height: 200px; }
+    .p-img-wrapper { height: 190px; }
+    .p-price { font-size: 16px; }
+    .p-details { padding: 12px; }
     .category-container { gap: 15px; }
-    .cat-card { width: 100px; }
-    .cat-card p { font-size: 11px; }
-    
-    /* मोबाइल पर WhatsApp को और सुरक्षित बनाना */
-    .wa-container { bottom: 15px; right: 10px; }
-    .wa-msg-pop { font-size: 11px; padding: 5px 10px; max-width: 180px; }
-    .whatsapp-modern { width: 50px; height: 50px; font-size: 26px; }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
